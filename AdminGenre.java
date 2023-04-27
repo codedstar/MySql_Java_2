@@ -4,12 +4,9 @@
  */
 package com.mycompany.cds2;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 /**
  *
@@ -22,34 +19,15 @@ import java.sql.Statement;
 
 
 public class AdminGenre {
-    Connection conn;
-    private String url;
-    private String username;
-    private String password;
     
-    public AdminGenre( String url,String username,String password){
-        this.url = url;
-        this.username = username;
-        this.password = password;
-    }
-    
-    public String connet(){
-
-        try{
-            conn = DriverManager.getConnection(url,username,password);
-            return "connection successful";
-            
-        }catch(SQLException exception){
-            return "Error" + exception.getMessage();
-        }
-        
-    }
-    
+    dbConn conn = new dbConn();
+    PreparedStatement pStmt;
+   
     public String insertGenre(String genreName){
         try{
             // PreparedStatement way
             String query = "INSERT INTO genre(name) VALUES(?)";
-            PreparedStatement pStmt = conn.prepareStatement(query);
+            pStmt = conn.connect().prepareStatement(query);
             pStmt.setString(1, genreName);
 
             int pStmtRowsAffected = pStmt.executeUpdate();
@@ -57,14 +35,19 @@ public class AdminGenre {
             
         }catch(SQLException exception){
              return "Error" + exception.getMessage();
+        }finally {
+//            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { pStmt.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.connect().close(); } catch (Exception e) { /* Ignored */ }
         }
+
     }
     
     public String readGenre(int id){
         try{
             // PreparedStatement way
             String query = "SELECT * FROM genre where (`id_genre` = ?) ";
-            PreparedStatement pStmt = conn.prepareStatement(query);
+            pStmt = conn.connect().prepareStatement(query);
             pStmt.setInt(1, id);
             
             ResultSet rs;            
@@ -83,6 +66,10 @@ public class AdminGenre {
             
         }catch(SQLException exception){
              return "Error" + exception.getMessage();
+        }finally {
+//            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { pStmt.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.connect().close(); } catch (Exception e) { /* Ignored */ }
         }
     }
     
@@ -90,7 +77,7 @@ public class AdminGenre {
         try{
             // PreparedStatement way
             String query = "SELECT * FROM genre ";
-            PreparedStatement pStmt = conn.prepareStatement(query);
+            pStmt = conn.connect().prepareStatement(query);
 //            pStmt.setInt(1, id);
             
             ResultSet rs;            
@@ -109,6 +96,10 @@ public class AdminGenre {
             
         }catch(SQLException exception){
              return "Error" + exception.getMessage();
+        }finally {
+//            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { pStmt.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.connect().close(); } catch (Exception e) { /* Ignored */ }
         }
     }
     
@@ -116,16 +107,20 @@ public class AdminGenre {
         try{
             // PreparedStatement way
             String query = "UPDATE `music`.`genre` SET `name` = ? WHERE (`id_genre` = ?)";
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, genreName);
-            statement.setInt(2, id);
+            pStmt = conn.connect().prepareStatement(query);
+            pStmt.setString(1, genreName);
+            pStmt.setInt(2, id);
 
-            int rowsUpdated = statement.executeUpdate();
+            int rowsUpdated = pStmt.executeUpdate();
             return rowsUpdated + " row(s) updated successfully.";
 
             
         }catch(SQLException exception){
              return "Error" + exception.getMessage();
+        }finally {
+//            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { pStmt.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.connect().close(); } catch (Exception e) { /* Ignored */ }
         }
     }
         
@@ -133,13 +128,17 @@ public class AdminGenre {
         try{
             // PreparedStatement way
             String query = "DELETE FROM `music`.`genre` WHERE (`id_genre` = ?)";
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setInt(1, id);
-            int rowsDeleted = statement.executeUpdate();
+            pStmt = conn.connect().prepareStatement(query);
+            pStmt.setInt(1, id);
+            int rowsDeleted = pStmt.executeUpdate();
             return rowsDeleted + " row(s) deleted successfully.";
             
         }catch(SQLException exception){
              return "Error" + exception.getMessage();
+        }finally {
+//            try { rs.close(); } catch (Exception e) { /* Ignored */ }
+            try { pStmt.close(); } catch (Exception e) { /* Ignored */ }
+            try { conn.connect().close(); } catch (Exception e) { /* Ignored */ }
         }
     }
 }
