@@ -81,15 +81,15 @@ public class AdminGenre {
 //            pStmt.setInt(1, id);
             
             ResultSet rs;            
-            String genID, genName, text = "";
+            String genID, genName, text = ("Genre id | Genre name\n");
 
             
             rs = pStmt.executeQuery();
             while (rs.next()) {               // Position the cursor                  4 
             genID = rs.getString(1);        // Retrieve the first column value
             genName = rs.getString(2);      // Retrieve the first column value
-            text += ("Genre id = " + genID +
-             "  Genre name = " + genName + "\n");
+            text += (genID +
+             "          |  " + genName + "\n");
                                             // Print the column values
           }
             return text;
